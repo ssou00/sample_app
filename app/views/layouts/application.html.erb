@@ -12,6 +12,35 @@
   </head>
 
   <body>
-    <%= yield %>
+    <header class = "navbar navbar-fixed-top navbar-inverse"> <!-- ページ上部に来るべき要素、3つのCSSクラス -->
+      <div class = "container"> <!-- 一般的な表示領域、CSSクラスが与えられている -->
+
+        <%= link_to "sample app", '#', id: "logo" %>
+        <!-- Railsヘルパー link_to {リンクテキスト URL(名前付きルーティング) オプションハッシュ(CSS idのlogo) } -->
+        <nav> <!-- nav => ナビゲーションタグ -->
+          <ul class="nav navar-nav navbar-right"> <!-- ul => 順不同リストタグ 
+            li => リストアイテムタグ -->
+            <li><%= link_to "Home",   '#' %></li> 
+            <li><%= link_to "Help",   '#' %></li>
+            <li><%= link_to "Log in", '#' %></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!--
+    <nav>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Help</a></li>
+        <li><a href="#">Log in</a></li>
+      </ul>
+    </nav>
+    -->
+
+    <div class="container">
+      <%= yield %> <!-- webサイトのレイアウトごにページごとの内容を挿入 -->
+    </div>
+
   </body>
 </html>
