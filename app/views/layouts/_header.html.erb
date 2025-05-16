@@ -1,0 +1,15 @@
+<header class="navbar navbar-fixed-top navbar-inverse">  <!-- ページ上部に来るべき要素、3つのCSSクラス -->
+  <div class="container">  <!-- 一般的な表示領域、CSSクラスが与えられている -->
+    <%= link_to "sample app", root_path, id:"logo" %>
+    <!-- Railsヘルパー link_to {リンクテキスト URL(名前付きルーティング) オプションハッシュ(CSS idのlogo) } -->
+    <nav><!-- nav => ナビゲーションタグ -->
+      <ul class="nav navbar-nav navbar-right"> 
+      <!-- ul => 順不同リストタグ 
+           li => リストアイテムタグ -->
+        <li><%= link_to "Home", root_path %></li>
+        <li><%= link_to "Help", help_path %></li>
+        <li><%= link_to "Log in",'#' %> </li>
+      </ul>
+    </nav>
+  </div>
+</header>

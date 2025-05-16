@@ -1,0 +1,114 @@
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+/*今回のアプリケーション固有のアセットだからapp/assetsへ*/
+
+/*
+値を変数として定義できる
+$ 変数名:     値;   */
+$light-gray: #777;
+
+/* universal */
+
+/* ページ上部に~~px分の余白を追加 */
+body {
+    padding-top: 60px;
+}
+
+/*  */
+section {
+    overflow: auto;
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* 先頭に.がついているとそのルールがクラスに適用されている
+   今回はcenterクラスに属しているdivなどのタグの内側にある要素がすべて中央揃えになる */
+.center {
+    text-align: center;
+    h1 {  /* 共通のパターンがある場合、以下に書き換えることもできる*/
+        margin-bottom: 10px;
+    }
+}
+
+
+
+
+/* typography */
+
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1;
+}
+
+h1 {
+    font-size: 3em;
+    letter-spacing: -2px;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+h2 {
+  font-size: 1.2em;
+  letter-spacing: -1px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: normal;
+  color: #777;  /* ここをL9で定義した変数名が使える 
+  color: $light-gray; */
+}
+
+p {
+    font-size: 1.1em;
+    line-height: 1.7em;
+}
+
+/* header */
+
+/* 先頭に#がついているとそのルールがCSSのidに対してスタイルを適用している */
+
+#logo {
+  float: left;
+  margin-right: 10px;
+  font-size: 1.7em;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  padding-top: 9px;
+  font-weight: bold;
+  /*  &を使って親属性(今回は#logo)の参照もできる */
+  &:hover {  /* hoverは該当するものにカーソルをかざしたときの表示を定義する */
+    color: #fff;
+    text-decoration: none;
+  }
+}
+
+
+
+/* footer */
+/* .centerと同じように下記のように同じものは省略ができる*/
+
+footer {
+  margin-top: 45px;
+  padding-top: 5px;
+  border-top: 1px solid #eaeaea;
+  color: $gray-light;
+  a {
+    color: #555;
+    &:hover {
+      color: #222;
+    }
+  }
+  small {
+    float: left;
+  }
+  ul {
+    float: right;
+    list-style: none;
+    li {
+      float: left;
+      margin-left: 15px;
+    }
+  }
+}
