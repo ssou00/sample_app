@@ -11,9 +11,14 @@
     <%= render 'layouts/header' %> 
     <!-- app/views/layouts/_headerを探してその内容を評価して結果をviewに挿入している -->
     <div class="container">
+      <% flash.each do |message_type, message| %>
+        <div class="alert alert-<%= message_type %>"><%= message %></div>
+      <% end %>
       <!-- webサイトのレイアウトごとにページごとの内容を挿入 -->
       <%= yield %> 
       <%= render 'layouts/footer' %>
+      <!-- デバッグ用の情報の追加 if文でdevelop環境のみに追加-->
+      <%= debug(params) if Rails.env.development? %>
     </div>
   </body>
 </html>

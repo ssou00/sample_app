@@ -9,4 +9,8 @@ Rails.application.routes.draw do
   get "/about", to: "static_pages#about"
   get "/contact", to: "static_pages#contact"
   get "/signup", to: "users#new"
+
+  # /users/1といったユーザー情報を表示するURLの追加
+  # さらにshow, new, edit, updateなどのRESTfulなアクションの追加
+  resources :users
 end
