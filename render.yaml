@@ -1,8 +1,0 @@
-services:
-  - type: web
-    name: sample-app
-    env: ruby
-    plan: free
-    buildCommand: "bundle install && bundle exec rake assets:precompile"
-    startCommand: "bundle exec puma -C config/puma.rb"
-    migrationsCommand: "bundle exec rails db:migrate"

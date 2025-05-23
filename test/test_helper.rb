@@ -14,4 +14,9 @@ class ActiveSupport::TestCase
   # ApplicationHelperをtest環境でも使えるように
   include ApplicationHelper 
 
+  def is_logged_in?
+    !session[:user_id].nil? # セッションヘルパーのlogged_in?と同じ
+    # testではsession Helperが使えないからここに追加
+  end
+
 end

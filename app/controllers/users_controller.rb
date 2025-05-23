@@ -11,8 +11,10 @@ class UsersController < ApplicationController
   end
 
   def create
-    @user = User.new(user_params) 
-    if @user.save
+    @user = User.new(user_params)# ユーザークラスを作成して 
+    if @user.save # ユーザーをdb上にsaveできたら作成できている
+      reset_session # セキュリティ対策にsessionをリセット
+      log_in @user # log in
       flash[:success] = "Welcome to the Sample App!"
       redirect_to @user
       # redirect_to user_url(@user)と同じ
