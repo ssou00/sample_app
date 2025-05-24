@@ -31,6 +31,11 @@ module SessionsHelper
         end
     end
 
+    # 渡されたユーザーがカレントユーザーであればtrueを返す
+    def current_user?(user)
+        user && user == current_user
+    end
+
     # 現在ログインしているかどうかの論理値を返す
     def logged_in?
         # 現在ログインしている -> current_userがnilじゃない
@@ -44,11 +49,17 @@ module SessionsHelper
         user.forget
         cookies.delete(:user_id)
         cookies.delete(:remember_token)
-  end
+    end
 
     def log_out
         forget(current_user) # db、cookiesからの破棄
         reset_session 
         @current_user = nil # current_userに保存されているログインしていたユーザー情報をnilで上書き
-    end    
+    end
+
+    # アクセスしようとしたURLを保存する
+    def store_location
+        session[:forwarding_url] = request.original_url if request.get?
+                                  #リクエスト先のURLを取得、getリクエストしたときのみ
+    end
 end

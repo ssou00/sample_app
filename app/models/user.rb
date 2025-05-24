@@ -10,7 +10,7 @@ class User < ApplicationRecord
                       uniqueness: true
     has_secure_password # 色んな要素を追加するメソッド
     # 
-    validates :password, presence: true, length: { minimum: 6 }
+    validates :password, presence: true, length: { minimum: 6 }, allow_nil: true
 
     # 渡された文字列のハッシュ値を返す -> セキュアなパスワードの作成時に使う
     def User.digest(string)
