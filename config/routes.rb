@@ -18,4 +18,6 @@ Rails.application.routes.draw do
   # さらにshow, new, edit, updateなどのRESTfulなアクションの追加
   resources :users
   resources :account_activations, only: [:edit]
+
+  get '/ping', to: proc { [200, {}, ['pong']] }
 end
