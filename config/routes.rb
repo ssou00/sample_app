@@ -17,4 +17,5 @@ Rails.application.routes.draw do
   # /users/1といったユーザー情報を表示するURLの追加
   # さらにshow, new, edit, updateなどのRESTfulなアクションの追加
   resources :users
+  resources :account_activations, only: [:edit]
 end

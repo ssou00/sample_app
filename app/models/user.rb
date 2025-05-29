@@ -1,7 +1,9 @@
 class User < ApplicationRecord
-    attr_accessor :remember_token # 仮想の属性の作成 これで検索かけないからインデックスいらない
+    attr_accessor :remember_token, :activation_token
+    # 仮想の属性の作成 これで検索かけないからインデックスいらない
+    before_save   :downcase_email # ユーザー情報のsave前にemailを小文字に変換
+    before_create :create_activation_digest # ユーザーが作成される前に有効か手順を挟む
 
-    before_save { self.email = email.downcase } # emailを小文字に変換
     # presence(存在性)、length(長さ)の最大の付与
     validates :name, presence: true, length: { maximum: 50 }
     VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
@@ -39,14 +41,41 @@ class User < ApplicationRecord
     end
 
     # 渡されたトークンがダイジェストと一致したらtrueを返す
-    def authenticated?(remember_token)
-        return false if remember_digest.nil?
-        BCrypt::Password.new(remember_digest).is_password?(remember_token)
+    def authenticated?(attribute,token)
+        digest = send("#{attribute}_digest")
+        return false if digest.nil?
+        BCrypt::Password.new(digest).is_password?(token)
     end
 
     # ユーザーのログイン情報を破棄する
     def forget
         update_attribute(:remember_digest, nil)
     end
+
+    # アカウントの有効化
+    def activate
+        update_columns(activated: true, activated_at: Time.zone.now)
+        # update_attribute(:activated, true)
+        # update_attribute(:activated_at, Time.zone.now)
+    end
+
+    # 有効化用のメールを送信する
+    def send_activation_email
+        UserMailer.account_activation(self).deliver_now
+    end
+
+    private
+
+        #メールアドレスをすべて小文字に
+        def downcase_email
+            self.email.downcase!
+        end
+
+        # 有効化トークンとダイジェストを作成、代入
+        def create_activation_digest
+            self.activation_token  = User.new_token
+            self.activation_digest = User.digest(activation_token)
+        end
+
 end
 

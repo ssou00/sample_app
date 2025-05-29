@@ -24,7 +24,7 @@ module SessionsHelper
             end
         elsif (user_id = cookies.encrypted[:user_id]) # cookiesに暗号化したuser_idが存在する場合
             user = User.find_by(id: user_id) # user_idが一致したuserを持ってくる
-            if user && user.authenticated?(cookies[:remember_token]) #userが存在する かつ cookiesのremember_tokenがハッシュ化されたremember_digestと一致する場合
+            if user && user.authenticated?(:remember, cookies[:remember_token]) #userが存在する かつ cookiesのremember_tokenがハッシュ化されたremember_digestと一致する場合
                 log_in user
                 @current_user = user
             end

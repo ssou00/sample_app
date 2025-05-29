@@ -5,12 +5,13 @@ class UsersController < ApplicationController
   before_action :admin_user, only: :destroy
 
   def index
-    @users = User.paginate(page: params[:page])
+    @users = User.where(activated: true).paginate(page: params[:page])
   end
 
   def show
     # /users/[:id]
     @user = User.find(params[:id])
+    redirect_to root_url and return unless @user.activated == true
     # params -> URLの末尾にidとして情報を渡す(/users/1<-これがparamsで引っ張ってこれる)
     # debugger このメソッドが呼び出された瞬間の状態をコマンドで確認できる
   end
@@ -21,12 +22,17 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)# ユーザークラスを作成して 
-    if @user.save # ユーザーをdb上にsaveできたら作成できている
-      reset_session # セキュリティ対策にsessionをリセット
-      log_in @user # log in
-      flash[:success] = "Welcome to the Sample App!"
-      redirect_to @user
+    if @user.save # ユーザーをdb上にsaveできたら
+      @user.send_activation_email # 有効化メールの送信
+      flash[:info] = "`lease check your email to activate your account." # 通知メッセージの表示
+      redirect_to root_url
+      
+      #reset_session # セキュリティ対策にsessionをリセット
+      #log_in @user # log in
+      #flash[:success] = "Welcome to the Sample App!"
+      #redirect_to @user
       # redirect_to user_url(@user)と同じ
+      
     else
       render 'new', status: :unprocessable_entity
     end
