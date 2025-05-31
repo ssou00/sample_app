@@ -18,6 +18,6 @@ Rails.application.routes.draw do
   # さらにshow, new, edit, updateなどのRESTfulなアクションの追加
   resources :users
   resources :account_activations, only: [:edit]
+  resources :password_resets, only: [:new, :create, :edit, :update]
 
-  get '/ping', to: proc { [200, {}, ['pong']] }
 end
