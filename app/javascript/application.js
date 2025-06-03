@@ -3,3 +3,4 @@
 import "@hotwired/turbo-rails"
 // import "controllers"  トグル表示のためにコメントアウト
 import "custom/menu"
+import "custom/image_upload"

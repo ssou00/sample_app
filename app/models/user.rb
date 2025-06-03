@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+    has_many :microposts, dependent: :destroy # micropostの集合を持っている、dependent: :destroy -> ユーザーが削除されたらマイクロポストも削除
     attr_accessor :remember_token, :activation_token, :reset_token
     # 仮想の属性の作成 これで検索かけないからインデックスいらない
     before_save   :downcase_email # ユーザー情報のsave前にemailを小文字に変換
@@ -78,6 +79,11 @@ class User < ApplicationRecord
     # パスワード再設定のメールを送信する
     def send_password_reset_email
         UserMailer.password_reset(self).deliver_now
+    end
+
+    # 試作feed
+    def feed
+        Micropost.where("user_id = ?", id) # クエリに代入する前に?にidがエスケープされるためセキュリティ上よい
     end
 
     private

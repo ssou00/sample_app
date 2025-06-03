@@ -5,7 +5,7 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     get root_path # ルートURLにGETリクエストを送る
     assert_template 'static_pages/home' # 正しいページテンプレートが表示されているかのテスト
     # 各ページへのリンクのテスト
-    assert_select "a[href=?]", root_path , count: 3
+    assert_select "a[href=?]", root_path , count: 2
     # count:2 はlogoとナビゲーションバーの2つのルートURLがあるから
     assert_select "a[href=?]", help_path
     assert_select "a[href=?]", about_path
