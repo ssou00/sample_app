@@ -1,0 +1,6 @@
+<%= form_with(model: current_user.active_relationships.find_by(followed: @user),
+              html: { method: :delete }) do |f| %>
+  <%= f.submit "Unfollow", class: "btn" %>
+<% end %>
+
+<% # relationship内で、current_userがfollowerにあり、followedが@userの列を検索しdeleteで投げる %>

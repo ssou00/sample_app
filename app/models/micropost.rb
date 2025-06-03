@@ -1,7 +1,7 @@
 class Micropost < ApplicationRecord
   belongs_to :user # userに属している->userに紐づけ
   has_one_attached :image do |attachable| # active_storageのimageに1つにつき1つだけ添付
-    attachable.variant :display, resize_to_limit: [500, 500]
+    attachable.variant :display, resize_to_limit: [500, 500] # 画像の大きさの限界の指定
   end
   # has_many_attachedで複数ファイルを添付可能
   default_scope -> { order(created_at: :desc) } # order -> 順番を指定、DESC -> 降順に

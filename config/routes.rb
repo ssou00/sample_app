@@ -16,11 +16,17 @@ Rails.application.routes.draw do
 
   # /users/1といったユーザー情報を表示するURLの追加
   # さらにshow, new, edit, updateなどのRESTfulなアクションの追加
-  resources :users
+  resources :users do
+    member do # memberを使うとユーザーidを含むURLを扱うようになる
+      get :following, :followers
+    end
+  # GET	/users/1/following	following	following_user_path(1)
+  # GET	/users/1/followers	followers	followers_user_path(1)
+  end
   resources :account_activations, only: [:edit]
-  resources :password_resets, only: [:new, :create, :edit, :update]
-  resources :microposts, only: [:create, :destroy]
-
+  resources :password_resets,     only: [:new, :create, :edit, :update]
+  resources :microposts,          only: [:create, :destroy]
+  resources :relationships,       only: [:create, :destroy]
   
   get '/microposts', to: 'static_pages#home'
 

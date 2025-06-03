@@ -1,5 +1,16 @@
 class User < ApplicationRecord
-    has_many :microposts, dependent: :destroy # micropostの集合を持っている、dependent: :destroy -> ユーザーが削除されたらマイクロポストも削除
+    has_many :microposts, dependent: :destroy # micropostの集合を持っている
+    # active_relationship -> 能動的relationship、このユーザーからfollowしに行っているリスト
+    has_many :active_relationships, class_name: "Relationship", # クラスの名前を指定
+                                    foreign_key: "follower_id", # 外部キーは本来"<class>_id"という名前だが今回は"follower_id"だからここで指定 この外部キーとこのユーザーidを参照してデータを持ってくる
+                                    dependent:  :destroy # dependent: :destroy -> ユーザーが削除されたらマイクロポストも削除
+    # passive -> 受動的relationship、このユーザーがfollowされたリスト
+    has_many :passive_relationships, class_name: "Relationship",
+                                    foreign_key: "followed_id",
+                                    dependent: :destroy
+    # through: でactive_relationshipでrelationshipモデルを通ってfollowingをたくさん持っている、souce: でfollowing配列の出所(中身)がfollowedなのを明示
+    has_many :following, through: :active_relationships, source: :followed 
+    has_many :followers, through: :passive_relationships, source: :follower # 上と同様に逆の関係を定義
     attr_accessor :remember_token, :activation_token, :reset_token
     # 仮想の属性の作成 これで検索かけないからインデックスいらない
     before_save   :downcase_email # ユーザー情報のsave前にemailを小文字に変換
@@ -83,8 +94,33 @@ class User < ApplicationRecord
 
     # 試作feed
     def feed
-        Micropost.where("user_id = ?", id) # クエリに代入する前に?にidがエスケープされるためセキュリティ上よい
+        # SQLのサブセレクトを文字列として格納し使う
+        following_ids = "SELECT followed_id FROM relationships
+                         WHERE  follower_id = :user_id"
+        # クエリに代入する前に?にidがエスケープされるためセキュリティ上よい
+        # IN でidの集合を扱える
+        # user.following_ids -> userのfollowing.map(&:id)であり、followingのユーザーの配列をidの配列に変換
+        # rails側でフォローしているユーザーidの集合を取得すると処理に時間がかかるから、DB側で集合の処理をする
+        Micropost.where("user_id IN (#{following_ids}) OR user_id = :user_id", follow_ids: following_ids, user_id: id)
+                # micropostひとつごとに毎回DBにクエリをし、ユーザーを取得していたが、includesでそのクエリを一つに
+                 .includes(:user, image_attachment: :blob)
     end
+
+    # ユーザーをフォロー
+    def follow(other_user)
+        following << other_user unless self == other_user
+    end
+
+    # ユーザーをフォロー解除
+    def unfollow(other_user)
+        following.delete(other_user)
+    end
+    
+    # 現在のユーザーがほかのユーザーをフォローしていればtrue
+    def following?(other_user)
+        following.include?(other_user)
+    end
+    
 
     private
 
