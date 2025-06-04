@@ -94,16 +94,20 @@ class User < ApplicationRecord
 
     # 試作feed
     def feed
+        part_of_feed = "relationships.follower_id = :id or microposts.user_id = :id"
+        Micropost.left_outer_joins(user: :followers)
+                 .where(part_of_feed, { id: id }).distinct
+                 .includes(:user, image_attachment: :blob)
         # SQLのサブセレクトを文字列として格納し使う
-        following_ids = "SELECT followed_id FROM relationships
-                         WHERE  follower_id = :user_id"
+        #following_ids = "SELECT followed_id FROM relationships
+        #                 WHERE  follower_id = :user_id"
         # クエリに代入する前に?にidがエスケープされるためセキュリティ上よい
         # IN でidの集合を扱える
         # user.following_ids -> userのfollowing.map(&:id)であり、followingのユーザーの配列をidの配列に変換
         # rails側でフォローしているユーザーidの集合を取得すると処理に時間がかかるから、DB側で集合の処理をする
-        Micropost.where("user_id IN (#{following_ids}) OR user_id = :user_id", follow_ids: following_ids, user_id: id)
+        #Micropost.where("user_id IN (#{following_ids}) OR user_id = :user_id", follow_ids: following_ids, user_id: id)
                 # micropostひとつごとに毎回DBにクエリをし、ユーザーを取得していたが、includesでそのクエリを一つに
-                 .includes(:user, image_attachment: :blob)
+        #         .includes(:user, image_attachment: :blob)
     end
 
     # ユーザーをフォロー
