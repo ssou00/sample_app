@@ -7,8 +7,9 @@ class SessionsController < ApplicationController
   def create # POST /login
     user = User.find_by(email: params[:session][:email].downcase) # Dbからメールアドレスで特定
     # &.演算子は obj && obj.method -> obj&.method にできる
-    if user &. authenticate(params[:session][:password])
-      if user.activated? # ユーザーが有効化済みの場合 # user&.authenticate(params[:session][:password]) # userが存在するかつ正しいパスワードの場合
+    # authenticate(password)でpasswordがこのユーザーの持っているDB内のハッシュ化されたpassword_digestと一致しているかの真理値をだす
+    if user&.authenticate(params[:session][:password]) # userが存在するかつ正しいパスワードの場合
+      if user.activated? # ユーザーが有効化済みの場合 
         forwarding_url = session[:forwarding_url]
         reset_session # ログイン直前に必ずこれを入れることで悪意のある第3者からのセッションIDをリセットできる
         params[:session][:remember_me] == '1' ? remember(user) : forget(user)

@@ -5,13 +5,13 @@ class UsersController < ApplicationController
   before_action :admin_user, only: :destroy
 
   def index
-    @users = User.where(activated: true).paginate(page: params[:page])
+    @users = User.where(activated: true).page(params[:page])
   end
 
   def show
     # /users/[:id]
     @user = User.find(params[:id])
-    @microposts = @user.microposts.paginate(page: params[:page])
+    @microposts = @user.microposts.page(params[:page])
     redirect_to root_url and return unless @user.activated == true
     # params -> URLの末尾にidとして情報を渡す(/users/1<-これがparamsで引っ張ってこれる)
     # debugger このメソッドが呼び出された瞬間の状態をコマンドで確認できる
@@ -25,7 +25,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)# ユーザークラスを作成して 
     if @user.save # ユーザーをdb上にsaveできたら
       @user.send_activation_email # 有効化メールの送信
-      flash[:info] = "`lease check your email to activate your account." # 通知メッセージの表示
+      flash[:info] = "Please check your email to activate your account." # 通知メッセージの表示
       redirect_to root_url
       
       #reset_session # セキュリティ対策にsessionをリセット
@@ -60,14 +60,14 @@ class UsersController < ApplicationController
   def following
     @title = "Following"
     @user = User.find(params[:id])
-    @users = @user.following.paginate(page: params[:page])
+    @users = @user.following.page(params[:page])
     render 'show_follow'
   end
 
   def followers
     @titls = "Followers"
     @user = User.find(params[:id])
-    @users = @user.followers.paginate(page: params[:page])
+    @users = @user.followers.page(params[:page])
     render 'show_follow'
   end
 

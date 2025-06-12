@@ -11,8 +11,8 @@ class User < ApplicationRecord
     # through: でactive_relationshipでrelationshipモデルを通ってfollowingをたくさん持っている、souce: でfollowing配列の出所(中身)がfollowedなのを明示
     has_many :following, through: :active_relationships, source: :followed 
     has_many :followers, through: :passive_relationships, source: :follower # 上と同様に逆の関係を定義
-    attr_accessor :remember_token, :activation_token, :reset_token
     # 仮想の属性の作成 これで検索かけないからインデックスいらない
+    attr_accessor :remember_token, :activation_token, :reset_token
     before_save   :downcase_email # ユーザー情報のsave前にemailを小文字に変換
     before_create :create_activation_digest # ユーザーが作成される前に有効か手順を挟む
 
@@ -43,7 +43,6 @@ class User < ApplicationRecord
         self.remember_token = User.new_token
         update_attribute(:remember_digest, User.digest(remember_token)) # 今回はパスワードにアクセスできないのでバリデーションを素通りさせる
                                          # digestでハッシュ化したトークンをdbにupdate
-        remember_digest
     end
 
     # セッションハイジャック防止のためにセッショントークンを返す

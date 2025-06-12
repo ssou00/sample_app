@@ -18,10 +18,7 @@ module SessionsHelper
     # 現在ログイン中のユーザーを返す
     def current_user
         if (user_id = session[:user_id]) # sessionにユーザーが保存されている場合
-            user = User.find_by(id: user_id)
-            if user && session[:session_token] == user.session_token
-                @current_user = user
-            end
+            @current_user ||= User.find_by(id: user_id)
         elsif (user_id = cookies.encrypted[:user_id]) # cookiesに暗号化したuser_idが存在する場合
             user = User.find_by(id: user_id) # user_idが一致したuserを持ってくる
             if user && user.authenticated?(:remember, cookies[:remember_token]) #userが存在する かつ cookiesのremember_tokenがハッシュ化されたremember_digestと一致する場合

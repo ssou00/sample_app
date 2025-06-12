@@ -8,7 +8,7 @@ gem "image_processing",           "1.12.2" # 画像のリサイズ
 gem "active_storage_validations", "0.9.8" # 画像のDB接続
 gem "bcrypt",          "3.1.18" # パスワードのハッシュ化
 gem "faker",           "2.21.0" # DBにサンプルデータを追加する
-gem "will_paginate",   "3.3.1"
+gem "kaminari"
 gem "bootstrap-will_paginate", "1.0.0"
 gem "bootstrap-sass",  "3.4.1"  # CSSのフレームワーク
 gem "sassc-rails",     "2.1.2"
